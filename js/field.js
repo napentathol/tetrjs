@@ -56,7 +56,6 @@ const Field = (function(){
                 if( allOccupied ) {
                     this.removeRow( i );
                     completeLines++;
-                    console.log( this.field );
                 } else {
                     i++;
                 }

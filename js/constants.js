@@ -7,7 +7,9 @@ const constants = (function () {
         FIELD_HEIGHT : FIELD_HEIGHT,
         HEIGHT_ABOVE_FIELD : HEIGHT_ABOVE_FIELD,
         TOTAL_HEIGHT : FIELD_HEIGHT + HEIGHT_ABOVE_FIELD,
-        BONUS_LINE_CLEAR : 4
+        BONUS_LINE_CLEAR : 4,
+        MAX_WEIGHT : 6,
+        MS_BETWEEN_TICKS : 500
     }
 })();
 

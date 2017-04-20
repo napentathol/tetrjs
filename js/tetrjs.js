@@ -2,38 +2,14 @@
     let canvas = document.getElementById("tetrjs");
     let ctx = canvas.getContext("2d");
     let field = new Field();
-    let tetr = getNewTetronimo();
+    let tetr = statistics.getNewTetronimo( field );
     let blockedTicks = 0;
     let score = 0;
-
-    function getNewTetronimo() {
-        let pos = new utils.Position( 4, constants.TOTAL_HEIGHT - 2 );
-        switch( getRandomInt( 1, 8) ) {
-            default:
-            case 1:
-                return new tetronimos.OTetronimo( field, pos );
-            case 2:
-                return new tetronimos.ITetronimo( field, pos );
-            case 3:
-                return new tetronimos.LTetronimo( field, pos );
-            case 4:
-                return new tetronimos.JTetronimo( field, pos );
-            case 5:
-                return new tetronimos.STetronimo( field, pos );
-            case 6:
-                return new tetronimos.ZTetronimo( field, pos );
-            case 7:
-                return new tetronimos.TTetronimo( field, pos );
-        }
-    }
-
-    function getRandomInt(min, max) {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min)) + min;
-    }
+    let paused = false;
 
     function tick() {
+        if( paused ) return;
+
         // check if blocked.
         if ( !tetr.moveDown() ) {
             blockedTicks++;
@@ -54,7 +30,7 @@
                 return;
             }
 
-            tetr = getNewTetronimo();
+            tetr = statistics.getNewTetronimo( field );
         }
 
         render();
@@ -63,14 +39,19 @@
     function render() {
         ctx.clearRect(0,0,canvas.width, canvas.height);
         utils.drawGrid( ctx );
+
+        if( paused ) return;
+
         field.render( ctx );
         tetr.render( ctx );
     }
 
-    let interval = window.setInterval( tick, 500 );
+    let interval = window.setInterval( tick, constants.MS_BETWEEN_TICKS );
 
     window.onkeydown = function onKeyDown(e) {
         if( field.hasLost() ) return;
+
+        if( paused && e.keyCode != 27 ) return;
 
         switch (e.keyCode) {
             case 40:
@@ -84,6 +65,10 @@
                 break;
             case 38:
                 tetr.rotateRight();
+                break;
+            case 27:
+                paused = !paused;
+                render();
                 break;
             default:
                 break;
